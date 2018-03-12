@@ -1,0 +1,30 @@
+#!/bin/sh /etc/rc.common
+#
+# Copyright (C) 1999-2018 TonyLu <tonylu@tony-cloud.com>
+#
+
+START=91
+
+start() {
+	ss-redir -c /etc/shadowsocks-ipv6.json --reuse-port -f /var/run/ss-redirv6-1.pid
+	ss-redir -c /etc/shadowsocks-ipv6.json --reuse-port -f /var/run/ss-redirv6-2.pid
+	ss-redir -c /etc/shadowsocks-ipv6.json --reuse-port -f /var/run/ss-redirv6-3.pid
+	ss-redir -c /etc/shadowsocks-ipv6.json --reuse-port -f /var/run/ss-redirv6-4.pid
+	ip6tables -t nat -I PREROUTING -p tcp -j REDIRECT --to-port 1082
+	ip6tables -t nat -I OUTPUT -p tcp -j REDIRECT --to-port 1082
+	logger -t "shadowsocks-ipv6 start"
+}
+
+stop() {
+	kill -9 `cat /var/run/ss-redirv6-1.pid` >/dev/null 2>&1
+	kill -9 `cat /var/run/ss-redirv6-2.pid` >/dev/null 2>&1
+	kill -9 `cat /var/run/ss-redirv6-3.pid` >/dev/null 2>&1
+	kill -9 `cat /var/run/ss-redirv6-4.pid` >/dev/null 2>&1
+	ip6tables -t nat -D PREROUTING -p tcp -j REDIRECT --to-port 1082
+	ip6tables -t nat -D OUTPUT -p tcp -j REDIRECT --to-port 1082
+	logger -t "shadowsocks-ipv6 stop"
+}
+
+restart() {
+    stop&&start
+}

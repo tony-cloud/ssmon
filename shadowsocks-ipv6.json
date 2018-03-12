@@ -1,0 +1,11 @@
+{
+	"server":"172.93.45.245",
+	"server_port":443,
+	"local_address":"::",
+	"local_port":1082,
+	"password":"lj123456",
+	"timeout":300,
+	"method":"aes-256-cfb",
+	"fast_open":false,
+	"workers":1
+}

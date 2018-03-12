@@ -1,0 +1,20 @@
+#!/bin/sh /etc/rc.common
+#
+# Copyright (C) 1999-2018 TonyLu <tonylu@tony-cloud.com>
+#
+
+START=16
+
+start() {
+	nohup /etc/sh/ssmon.sh >/dev/null 2>&1 &
+    logger -t "ssmon" "delegate nat filter start"
+}
+
+stop() {
+	killall ssmon.sh
+	logger -t "ssmon" "delegate nat filter stop"
+}
+
+restart() {
+    stop&&start
+}
